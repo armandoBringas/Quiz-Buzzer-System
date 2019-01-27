@@ -22,6 +22,18 @@
           <root url="jar://$USER_HOME$/Desktop/processing-3.4/modes/java/libraries/serial/library/serial.jar!/" />
         </CLASSES>
         <JAVADOC />
+        <NATIVE>
+          <root url="file://$USER_HOME$/Desktop/processing-3.4/modes/java/libraries/serial/library/windows64" />
+        </NATIVE>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/processing-3.4/modes/java/libraries/serial/library/jssc.jar!/" />
+        </CLASSES>
+        <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
