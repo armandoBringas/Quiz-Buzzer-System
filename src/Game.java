@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PFont;
 
 public class Game extends PApplet{
@@ -6,6 +7,7 @@ public class Game extends PApplet{
     private PFont font;
     private String gameState;
     private String gamePlayState;
+    private int buttonDelay = 250;
     public static Player[] players;
 
     // Start Processing
@@ -31,9 +33,11 @@ public class Game extends PApplet{
             case "SETTINGS":
                 this.settingsGame();
                 break;
+            case "TOPIC":
+                this.topicGame();
+                break;
             case "PLAY":
                 this.playGame();
-                break;
             case "WIN":
                 // Show winner
                 break;
@@ -56,6 +60,7 @@ public class Game extends PApplet{
 
         if(this.mousePressed){
             this.gameState = "SETTINGS";
+            this.delay(buttonDelay);
         }
     }
 
@@ -79,36 +84,16 @@ public class Game extends PApplet{
 
         Button button = new Button(this, 100, width/2, height/2);
         if(this.mousePressed && button.overCircle()){
-            this.gameState = "PLAY";
-            this.gamePlayState = "TOPIC";
+            this.gameState = "TOPIC";
+            this.delay(buttonDelay);
         }
     }
 
     /*
      * Frame : Game Topic
-     * Display lesson Video
-     * Display lesson questions
+     * Display topic to play
      */
-    private void playGame(){
-        if (this.gamePlayState.equals("TOPIC")){
-            this.topic();
-        } else if(this.gamePlayState.equals("LESSONS")){
-
-            Lesson lesson = new Lesson(this, "A");
-            lesson.displayLesson();
-
-            /*
-            // Display Lessons
-            int nLessons = 4;
-            Lesson[] lessons = new Lesson[nLessons];
-            for (int i = 0; i < nLessons; i ++){
-                lessons[i] = new Lesson(this, "A");
-            }
-            */
-        }
-    }
-
-    private void topic(){
+    private void topicGame(){
         // Show text 1
         this.textFont(this.font);
         this.textAlign(CENTER);
@@ -118,9 +103,49 @@ public class Game extends PApplet{
 
         Button button = new Button(this, 100, width/2, height/2 + height/8);
         if(this.mousePressed && button.overCircle()){
-            this.gamePlayState = "LESSONS";
+            this.gameState = "PLAY";
+            this.gamePlayState = "LESSON-COVER";
+            this.delay(buttonDelay);
         }
     }
 
+
+    private void playGame(){
+        int nLessons = 4;
+        for (int i = 0; i < nLessons; i ++){
+
+            switch (this.gamePlayState) {
+                case "LESSON-COVER":
+                    this.coverLesson();
+                    break;
+                case "LESSON-PLAY":
+                    this.playLesson();
+                    break;
+                case "LESSON-RESULTS":
+                    break;
+            }
+        }
+    }
+
+
+    private void coverLesson(){
+        // Show text 1
+        this.textAlign(PConstants.CENTER);
+        this.textSize(100);
+        this.fill(255);
+        this.text("Lesson A", this.width / 2, this.height /2);
+
+        Button button = new Button(this, 50, this.width/2, this.height/2 + this.height/16);
+        if(this.mousePressed && button.overCircle()){
+            this.gamePlayState = "LESSON-PLAY";
+            this.delay(buttonDelay);
+        }
+
+    }
+
+    private void playLesson(){
+
+        this.text("TEST", this.width / 2, this.height /2);
+    }
 
 }
