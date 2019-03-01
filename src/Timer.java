@@ -2,11 +2,11 @@ import processing.core.PApplet;
 
 public class Timer {
 
-    float Time;
-    PApplet Parent;
+    private float Time;
+    private PApplet Parent;
 
     // Constructor of the Timer class
-    public void Timer(PApplet p, float set) {
+    public Timer(PApplet p, float set) {
         this.Parent = p;
         this.Time = set;
     }

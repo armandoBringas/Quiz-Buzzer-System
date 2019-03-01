@@ -1,9 +1,10 @@
 import processing.core.PApplet;
 
 public class Lesson {
-    PApplet Parent;
 
-    public void Lesson(PApplet p) {
+    private PApplet Parent;
+
+    public Lesson(PApplet p) {
         this.Parent = p;
     }
 }
