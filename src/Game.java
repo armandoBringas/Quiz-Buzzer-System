@@ -3,14 +3,9 @@ import processing.core.PFont;
 
 public class Game extends PApplet{
 
-    // Fonts setup
     private PFont font;
-
-    // Frames to show
-    private boolean showGameCover = true;
-    private boolean showGameSettings = false;
-    private boolean showGameTopic = false;
-
+    private String gameState;
+    private String gamePlayState;
     public static Player[] players;
 
     // Start Processing
@@ -20,52 +15,47 @@ public class Game extends PApplet{
 
     // Processing Settings
     public void settings(){
-        // Screen settings
         this.size(1280, 720, JAVA2D);
-
-        //Load fonts
         this.font = loadFont("AgencyFB-Bold-200.vlw");
+        this.gameState = "START";
     }
 
     // Processing Display
     public void draw(){
         this.background(68,114,202);
 
-        // Slow frame rate for options selection
-        this.frameRate(10);
-
-        // Display game frames
-        if (this.showGameCover){
-            this.gameCover();
-        } else {
-            if (this.showGameSettings) {
-                this.gameSettings();
-            } else {
-                if (this.showGameTopic) {
-                    this.gameTopic();
-                }
-            }
+        switch (this.gameState) {
+            case "START":
+                this.startGame();
+                break;
+            case "SETTINGS":
+                this.settingsGame();
+                break;
+            case "PLAY":
+                this.playGame();
+                break;
+            case "WIN":
+                // Show winner
+                break;
         }
     }
 
     // Frame : Game Cover
-    private void gameCover(){
-        // Show "Bring Us Knowledge" title
+    private void startGame(){
+        // Show text 1
         this.textFont(this.font);
         this.textAlign(CENTER);
         this.textSize(100);
         this.fill(255);
         this.text("Bring Us Knowledge", width / 2, height /2);
 
-        // Show "Press any button" title
+        // Show text 2
         this.textSize(50);
         this.fill(207, 222, 231);
-        this.text("Press any key to start!...", width/2, height/2 + height/8);
+        this.text("Click anywhere to start!...", width/2, height/2 + height/8);
 
-        // Detect key pressed to change to next frame
-        if (this.keyPressed && this.showGameCover && !this.showGameSettings && !this.showGameTopic){
-            this.showGameCover = false;
-            this.showGameSettings = true;
+        if(this.mousePressed){
+            this.gameState = "SETTINGS";
         }
     }
 
@@ -74,7 +64,7 @@ public class Game extends PApplet{
      * Select number of players
      * Select topic to play
      */
-    private void gameSettings(){
+    private void settingsGame(){
         // Show "Select game settings title"
         this.textSize(75);
         this.fill(207, 222, 231);
@@ -87,10 +77,10 @@ public class Game extends PApplet{
             players[i] = new Player(i);
         }
 
-        // Detect key pressed to change to next frame
-        if (this.keyPressed && !this.showGameCover && this.showGameSettings && !this.showGameTopic){
-            this.showGameSettings = false;
-            this.showGameTopic = true;
+        Button button = new Button(this, 100, width/2, height/2);
+        if(this.mousePressed && button.overCircle()){
+            this.gameState = "PLAY";
+            this.gamePlayState = "TOPIC";
         }
     }
 
@@ -99,8 +89,38 @@ public class Game extends PApplet{
      * Display lesson Video
      * Display lesson questions
      */
-    private void gameTopic(){
-        Topic topic = new Topic(this, "Grammar");
-        topic.startTopic();
+    private void playGame(){
+        if (this.gamePlayState.equals("TOPIC")){
+            this.topic();
+        } else if(this.gamePlayState.equals("LESSONS")){
+
+            Lesson lesson = new Lesson(this, "A");
+            lesson.displayLesson();
+
+            /*
+            // Display Lessons
+            int nLessons = 4;
+            Lesson[] lessons = new Lesson[nLessons];
+            for (int i = 0; i < nLessons; i ++){
+                lessons[i] = new Lesson(this, "A");
+            }
+            */
+        }
     }
+
+    private void topic(){
+        // Show text 1
+        this.textFont(this.font);
+        this.textAlign(CENTER);
+        this.textSize(100);
+        this.fill(255);
+        this.text("Topic X", width / 2, height /2);
+
+        Button button = new Button(this, 100, width/2, height/2 + height/8);
+        if(this.mousePressed && button.overCircle()){
+            this.gamePlayState = "LESSONS";
+        }
+    }
+
+
 }
