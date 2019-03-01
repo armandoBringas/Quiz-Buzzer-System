@@ -8,6 +8,7 @@ public class Game extends PApplet{
     private String gameState;
     private String gamePlayState;
     private int buttonDelay = 250;
+    private Timer timer;
     public static Player[] players;
 
     // Start Processing
@@ -20,6 +21,8 @@ public class Game extends PApplet{
         this.size(1280, 720, JAVA2D);
         this.font = loadFont("AgencyFB-Bold-200.vlw");
         this.gameState = "START";
+
+        this.timer = new Timer(this, 10);
     }
 
     // Processing Display
@@ -119,6 +122,7 @@ public class Game extends PApplet{
                     this.coverLesson();
                     break;
                 case "LESSON-PLAY":
+
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
@@ -144,8 +148,9 @@ public class Game extends PApplet{
     }
 
     private void playLesson(){
+        this.timer.countDown();
 
-        this.text("TEST", this.width / 2, this.height /2);
+        this.text((int)this.timer.getTime(), this.width / 2, this.height /2);
     }
 
 }

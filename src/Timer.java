@@ -24,7 +24,7 @@ public class Timer {
     // Update the timer by counting down
     void countDown() {
         if (this.Time > 0) {
-            this.Time -= 1/this.Parent.frameRate;
+            this.Time -= 1/(this.Parent.frameRate * 4);
         } else {
             this.Time = 0;
         }
