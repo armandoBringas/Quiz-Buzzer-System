@@ -13,6 +13,9 @@ public class Game extends PApplet{
     private String gamePlayState;
     private int buttonDelay = 250;
     private Timer timer;
+
+    //Players
+    private  int nPlayers = 2;
     public static Player[] players;
 
     //JSON Objects of topics
@@ -95,29 +98,40 @@ public class Game extends PApplet{
     private void settingsGame(){
         // Show text 1
         this.textSize(100);
-        this.fill(207, 222, 231);
+        this.fill(255);
         this.text("Select your game settings", width/2, height/6);
 
         // Show text 2 & 3
         this.textSize(50);
-        this.fill(255);
-        this.text("Select number of players:", width/2, height/2 - height/32);
+
+        Button btnPlayers = new Button(this, false, 500, 60, this.width/2, this.height/2 - this.height/8, "", false);
+        if(this.mousePressed && btnPlayers.overRectangle()){
+            this.nPlayers++;
+            this.delay(this.buttonDelay);
+
+            // Reset players to 1
+            if(this.nPlayers > 3){
+                this.nPlayers = 1;
+            }
+        }
+
+        this.fill(207, 222, 231);
+        this.text("Select number of players: " + this.nPlayers, width/2, height/2 - height/8);
         this.text("Select topic to play:", width/2, height/2 + height/16);
 
 
-        // Set number of players
-        // TODO control according with player selection
-        int n = 2;
-        players = new Player[n];
-        for (int i = 0; i < n; i++){
-            players[i] = new Player(i);
-        }
-
         // Continue button
         Button button = new Button(this, false, 350, 125, this.width/2, this.height - 125, "Start Game!", true);
-        if(this.mousePressed && button.overCircle()){
+        if(this.mousePressed && button.overRectangle()){
             this.gameState = "TOPIC";
-            this.delay(buttonDelay);
+            this.delay(this.buttonDelay);
+
+            // Setup players
+            players = new Player[n];
+            for (int i = 0; i < this.nPlayers; i++){
+                players[i] = new Player(i);
+            }
+
         }
     }
 
@@ -141,7 +155,7 @@ public class Game extends PApplet{
         if(this.mousePressed){
             this.gameState = "PLAY";
             this.gamePlayState = "LESSON-COVER";
-            this.delay(buttonDelay);
+            this.delay(this.buttonDelay);
         }
     }
 
@@ -197,7 +211,7 @@ public class Game extends PApplet{
         Button buttonPlay = new Button(this, true, this.width/3, this.width/3, (3*this.width)/4, this.height/2, "", false);
         if(this.mousePressed && buttonPlay.overCircle()){
             this.gamePlayState = "LESSON-PLAY";
-            this.delay(buttonDelay);
+            this.delay(this.buttonDelay);
         }
     }
 
