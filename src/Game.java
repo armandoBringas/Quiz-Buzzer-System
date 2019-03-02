@@ -2,6 +2,8 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
+import processing.data.JSONObject;
+
 import java.io.IOException;
 
 public class Game extends PApplet{
@@ -12,6 +14,9 @@ public class Game extends PApplet{
     private int buttonDelay = 250;
     private Timer timer;
     public static Player[] players;
+
+    //JSON Objects of topics
+    private JSONObject[] topicJSONs;
 
     //Images
     private PImage gamePlay;
@@ -33,6 +38,10 @@ public class Game extends PApplet{
         this.gamePlay = loadImage("PlayGameLesson.png");
         this.gameLesson = loadImage("PlayVideoLesson.png");
 
+        //Load json
+        this.topicJSONs = new JSONObject[2];
+        this.topicJSONs[0] = this.loadJSONObject("topic1.json");
+        this.topicJSONs[1] = this.loadJSONObject("topic2.json");
     }
 
     // Processing Display
