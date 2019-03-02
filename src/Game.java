@@ -104,7 +104,7 @@ public class Game extends PApplet{
         }
 
         // Continue button
-        Button button = new Button(this, false, 350, 125, this.width/2, this.height - 125, "Start Game!");
+        Button button = new Button(this, false, 350, 125, this.width/2, this.height - 125, "Start Game!", true);
         if(this.mousePressed && button.overCircle()){
             this.gameState = "TOPIC";
             this.delay(buttonDelay);
@@ -160,15 +160,20 @@ public class Game extends PApplet{
         this.textAlign(PConstants.CENTER);
         this.textSize(85);
         this.fill(255);
-        this.text("Lesson A", this.width / 2, 85 + this.height/32);
+        this.text("Lesson 1", this.width / 2, 85 + this.height/32);
 
         // Display images and text
         this.imageMode(CENTER);
+        this.textSize(50);
+        this.fill(252, 226, 5);
+        this.text("Play Lesson", this.width/4, 50 + (this.height/2) +((width/3)/2));
         image(this.gameLesson, this.width/4, this.height/2, width/3, width/3);
+        this.text("Play Game!", (3*width)/4, 50 + (this.height/2) +((width/3)/2));
         image(this.gamePlay, (3*width)/4, this.height/2, width/3, width/3);
 
-        Button button = new Button(this, true, 50, 50, this.width/2, this.height/2 + this.height/16, "Start Game!");
-        if(this.mousePressed && button.overCircle()){
+        //Buttons for images
+        Button buttonPlay = new Button(this, true, width/3, width/3, (3*width)/4, this.height/2, "", false);
+        if(this.mousePressed && buttonPlay.overCircle()){
             this.gamePlayState = "LESSON-PLAY";
             this.delay(buttonDelay);
         }

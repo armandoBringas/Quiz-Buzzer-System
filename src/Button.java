@@ -9,7 +9,15 @@ public class Button {
     private float locX;
     private float locY;
 
-    Button(PApplet parent, boolean isCircular, float sizeX, float sizeY, float locX, float locY, String text) {
+    Button(
+            PApplet parent,
+            boolean isCircular,
+            float sizeX,
+            float sizeY,
+            float locX,
+            float locY,
+            String text,
+            boolean isFilled) {
         this.p = parent;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -17,7 +25,12 @@ public class Button {
         this.locY = locY;
 
         this.p.noStroke();
-        this.p.fill(169,169,169);
+
+        if (isFilled){
+            this.p.fill(169,169,169);
+        } else {
+            this.p.noFill();
+        }
 
         if(isCircular){
             this.p.ellipseMode(PConstants.CENTER);
