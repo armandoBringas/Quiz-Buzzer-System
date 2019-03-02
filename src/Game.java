@@ -4,7 +4,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
 
-import java.io.IOException;
+// import java.io.IOException;
 
 public class Game extends PApplet{
 
