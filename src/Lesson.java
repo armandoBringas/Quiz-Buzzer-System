@@ -3,7 +3,6 @@ import java.util.HashMap;
 public class Lesson {
 
     private int number;
-    private String description;
     private String question;
     HashMap<String, Boolean> answers;
 
@@ -16,10 +15,6 @@ public class Lesson {
 
     public int getNumber() {
         return this.number;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public String getQuestion() {

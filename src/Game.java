@@ -3,6 +3,7 @@ import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
+import java.util.HashMap;
 
 // import java.io.IOException;
 
@@ -16,11 +17,13 @@ public class Game extends PApplet{
 
     //Players
     private  int nPlayers = 2;
-    public static Player[] players;
+    private static Player[] players;
+
+    //Topic with lessons
+    private HashMap<String, Lesson[]> topic = new HashMap<String, Lesson[]>();
 
     //JSON Objects of topics
     private JSONObject[] topicJSONs;
-
     //Images
     private PImage gamePlay;
     private PImage gameLesson;
@@ -41,10 +44,14 @@ public class Game extends PApplet{
         this.gamePlay = loadImage("PlayGameLesson.png");
         this.gameLesson = loadImage("PlayVideoLesson.png");
 
-        //Load json
+        //TODO populate topics hash table with .json files
         this.topicJSONs = new JSONObject[2];
         this.topicJSONs[0] = this.loadJSONObject("topic1.json");
         this.topicJSONs[1] = this.loadJSONObject("topic2.json");
+
+        //TODO Hard coded filled of topics
+
+
     }
 
     // Processing Display
@@ -169,7 +176,6 @@ public class Game extends PApplet{
                     this.coverLesson();
                     break;
                 case "LESSON-PLAY":
-
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
@@ -220,4 +226,10 @@ public class Game extends PApplet{
 
         this.text((int)this.timer.getTime(), this.width / 2, this.height /2);
     }
+
+    private void hardCodedTopic1(){
+
+    }
+
+
 }
