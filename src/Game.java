@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
+import processing.core.PImage;
 
 public class Game extends PApplet{
 
@@ -10,6 +11,10 @@ public class Game extends PApplet{
     private int buttonDelay = 250;
     private Timer timer;
     public static Player[] players;
+
+    //Images
+    private PImage gamePlay;
+    private PImage gameLesson;
 
     // Start Processing
     public static void main(String... args){
@@ -21,12 +26,17 @@ public class Game extends PApplet{
         this.size(1280, 720, JAVA2D);
         this.font = loadFont("AgencyFB-Bold-200.vlw");
         this.gameState = "START";
-
         this.timer = new Timer(this, 10);
+
+        //Load images
+        this.gamePlay = loadImage("PlayGameLesson.png");
+        this.gameLesson = loadImage("PlayVideoLesson.png");
+
     }
 
     // Processing Display
     public void draw(){
+        this.cursor(PConstants.CROSS);
         this.background(68,114,202);
 
         switch (this.gameState) {
@@ -73,19 +83,28 @@ public class Game extends PApplet{
      * Select topic to play
      */
     private void settingsGame(){
-        // Show "Select game settings title"
-        this.textSize(75);
+        // Show text 1
+        this.textSize(100);
         this.fill(207, 222, 231);
-        this.text("Select Game Settings", width/2, height/6);
+        this.text("Select your game settings", width/2, height/6);
+
+        // Show text 2 & 3
+        this.textSize(50);
+        this.fill(255);
+        this.text("Select number of players:", width/2, height/2 - height/32);
+        this.text("Select topic to play:", width/2, height/2 + height/16);
+
 
         // Set number of players
+        // TODO control according with player selection
         int n = 2;
         players = new Player[n];
         for (int i = 0; i < n; i++){
             players[i] = new Player(i);
         }
 
-        Button button = new Button(this, 100, width/2, height/2);
+        // Continue button
+        Button button = new Button(this, false, 350, 125, this.width/2, this.height - 125, "Start Game!");
         if(this.mousePressed && button.overCircle()){
             this.gameState = "TOPIC";
             this.delay(buttonDelay);
@@ -104,8 +123,12 @@ public class Game extends PApplet{
         this.fill(255);
         this.text("Topic X", width / 2, height /2);
 
-        Button button = new Button(this, 100, width/2, height/2 + height/8);
-        if(this.mousePressed && button.overCircle()){
+        // Show text 2
+        this.textSize(50);
+        this.fill(207, 222, 231);
+        this.text("Click anywhere to start!...", width/2, height/2 + height/8);
+
+        if(this.mousePressed){
             this.gameState = "PLAY";
             this.gamePlayState = "LESSON-COVER";
             this.delay(buttonDelay);
@@ -135,16 +158,20 @@ public class Game extends PApplet{
     private void coverLesson(){
         // Show text 1
         this.textAlign(PConstants.CENTER);
-        this.textSize(100);
+        this.textSize(85);
         this.fill(255);
-        this.text("Lesson A", this.width / 2, this.height /2);
+        this.text("Lesson A", this.width / 2, 85 + this.height/32);
 
-        Button button = new Button(this, 50, this.width/2, this.height/2 + this.height/16);
+        // Display images and text
+        this.imageMode(CENTER);
+        image(this.gameLesson, this.width/4, this.height/2, width/3, width/3);
+        image(this.gamePlay, (3*width)/4, this.height/2, width/3, width/3);
+
+        Button button = new Button(this, true, 50, 50, this.width/2, this.height/2 + this.height/16, "Start Game!");
         if(this.mousePressed && button.overCircle()){
             this.gamePlayState = "LESSON-PLAY";
             this.delay(buttonDelay);
         }
-
     }
 
     private void playLesson(){

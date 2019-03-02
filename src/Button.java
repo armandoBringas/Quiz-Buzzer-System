@@ -4,25 +4,44 @@ import processing.core.PConstants;
 public class Button {
 
     private PApplet p;
-    private float diameter;
+    private float sizeX;
+    private float sizeY;
     private float locX;
     private float locY;
 
-    Button(PApplet parent, float diameter, float locX, float locY) {
+    Button(PApplet parent, boolean isCircular, float sizeX, float sizeY, float locX, float locY, String text) {
         this.p = parent;
-        this.diameter = diameter;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
         this.locX = locX;
         this.locY = locY;
 
-        this.p.ellipseMode(PConstants.CENTER);
-        this.p.fill(255);
-        this.p.ellipse(locX, locY, diameter, diameter);
+        this.p.noStroke();
+        this.p.fill(169,169,169);
+
+        if(isCircular){
+            this.p.ellipseMode(PConstants.CENTER);
+            this.p.ellipse(this.locX, this.locY, this.sizeX, this.sizeY);
+        } else {
+            this.p.rectMode(PConstants.CENTER);
+            this.p.rect(this.locX, this.locY, this.sizeX, this.sizeY, this.sizeY/4, this.sizeY/4, this.sizeY/4, this.sizeY/4);
+        }
+
+        this.p.fill(32,32,32);
+        this.p.textAlign(PConstants.CENTER, PConstants.CENTER);
+        this.p.text(text, this.locX, this.locY);
     }
 
     boolean overCircle(){
         float disX = this.locX - this.p.mouseX;
         float disY = this.locY - this.p.mouseY;
+        return (PApplet.sqrt(PApplet.sq(disX) + PApplet.sq(disY)) < this.sizeX / 2);
+    }
 
-        return (PApplet.sqrt(PApplet.sq(disX) + PApplet.sq(disY)) < this.diameter / 2);
+    boolean overRect(){
+        return this.p.mouseX >= this.locX
+                && this.p.mouseX <= this.locX + this.sizeX
+                && this.p.mouseY >= this.locY
+                && this.p.mouseY <= this.locY + this.sizeY;
     }
 }
