@@ -2,6 +2,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
+import java.io.IOException;
 
 public class Game extends PApplet{
 
@@ -158,7 +159,7 @@ public class Game extends PApplet{
     private void coverLesson(){
         // Show text 1
         this.textAlign(PConstants.CENTER);
-        this.textSize(85);
+        this.textSize(85); //85
         this.fill(255);
         this.text("Lesson 1", this.width / 2, 85 + this.height/32);
 
@@ -166,13 +167,25 @@ public class Game extends PApplet{
         this.imageMode(CENTER);
         this.textSize(50);
         this.fill(252, 226, 5);
-        this.text("Play Lesson", this.width/4, 50 + (this.height/2) +((width/3)/2));
-        image(this.gameLesson, this.width/4, this.height/2, width/3, width/3);
-        this.text("Play Game!", (3*width)/4, 50 + (this.height/2) +((width/3)/2));
-        image(this.gamePlay, (3*width)/4, this.height/2, width/3, width/3);
+        this.text("Play Lesson", this.width/4, 50 + (this.height/2) +((this.width/3)/2));
+        image(this.gameLesson, this.width/4, this.height/2, this.width/3, this.width/3);
+        this.text("Play Game!", (3*this.width)/4, 50 + (this.height/2) +((this.width/3)/2));
+        image(this.gamePlay, (3*this.width)/4, this.height/2, this.width/3, this.width/3);
 
         //Buttons for images
-        Button buttonPlay = new Button(this, true, width/3, width/3, (3*width)/4, this.height/2, "", false);
+        Button buttonLesson = new Button(this, true, this.width/3, this.width/3, this.width/4, this.height/2, "", false);
+        if(this.mousePressed && buttonLesson.overCircle()){
+            PApplet.launch(this.sketchPath("")+"src\\SampleVideo.mp4");
+            /*
+            try {
+                // Runtime.getRuntime().exec("C:\\Program Files\\Windows Media Player\\wmplayer.exe /play C:\\Users\\Armando\\Documents\\GitHub\\Quiz-Buzzer-System\\src\\SampleVideo.mp4");
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+            */
+        }
+
+        Button buttonPlay = new Button(this, true, this.width/3, this.width/3, (3*this.width)/4, this.height/2, "", false);
         if(this.mousePressed && buttonPlay.overCircle()){
             this.gamePlayState = "LESSON-PLAY";
             this.delay(buttonDelay);
@@ -184,5 +197,4 @@ public class Game extends PApplet{
 
         this.text((int)this.timer.getTime(), this.width / 2, this.height /2);
     }
-
 }
