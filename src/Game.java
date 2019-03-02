@@ -127,7 +127,7 @@ public class Game extends PApplet{
             this.delay(this.buttonDelay);
 
             // Setup players
-            players = new Player[n];
+            players = new Player[this.nPlayers];
             for (int i = 0; i < this.nPlayers; i++){
                 players[i] = new Player(i);
             }
