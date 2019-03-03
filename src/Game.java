@@ -24,9 +24,12 @@ public class Game extends PApplet{
 
     //JSON Objects of topics
     private JSONObject[] topicJSONs;
+
     //Images
     private PImage gamePlay;
     private PImage gameLesson;
+    private PImage imgCorrectAnswer;
+    private PImage imgIncorrectAnswer;
 
     // Start Processing
     public static void main(String... args){
@@ -43,15 +46,15 @@ public class Game extends PApplet{
         //Load images
         this.gamePlay = loadImage("PlayGameLesson.png");
         this.gameLesson = loadImage("PlayVideoLesson.png");
+        this.imgCorrectAnswer = loadImage("correctAnswer.png");
+        this.imgIncorrectAnswer = loadImage("incorrectAnswer.png");
 
         //TODO populate topics hash table with .json files
         this.topicJSONs = new JSONObject[2];
         this.topicJSONs[0] = this.loadJSONObject("topic1.json");
         this.topicJSONs[1] = this.loadJSONObject("topic2.json");
 
-        //TODO Hard coded filled of topics
-
-
+        //TODO Remove Hard coded filled of topics
     }
 
     // Processing Display
@@ -168,8 +171,6 @@ public class Game extends PApplet{
 
 
     private void playGame(){
-        int nLessons = 4;
-        for (int i = 0; i < nLessons; i ++){
 
             switch (this.gamePlayState) {
                 case "LESSON-COVER":
@@ -179,9 +180,10 @@ public class Game extends PApplet{
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
+                    this.playResults();
                     break;
             }
-        }
+
     }
 
 
@@ -222,9 +224,30 @@ public class Game extends PApplet{
     }
 
     private void playLesson(){
-        this.timer.countDown();
 
+        this.timer.countDown();
         this.text((int)this.timer.getTime(), this.width / 2, this.height /2);
+
+        // Time out
+        if (this.timer.getTime() == 0){
+            this.gamePlayState = "LESSON-RESULTS";
+            this.timer.setTime(10);
+        }
+    }
+
+    private void playResults(){
+        this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
+
+        // Show text 2
+        this.textSize(50);
+        this.fill(207, 222, 231);
+        this.text("Click anywhere to start!...", width/2, height/2 + height/8);
+
+
+        if(this.mousePressed){
+            this.gamePlayState = "LESSON-PLAY";
+            this.delay(this.buttonDelay);
+        }
     }
 
     private void hardCodedTopic1(){
