@@ -5,6 +5,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 // import java.io.IOException;
 
@@ -32,6 +33,10 @@ public class Game extends PApplet{
     //JSON Objects of topics
     private JSONObject[] topicJSONs;
 
+    private ArrayList<Topic> jsonTopics = new ArrayList<Topic>();
+    private int currentTopic;
+    private int currentQuestion;
+
     //Images
     private PImage gamePlay;
     private PImage gameLesson;
@@ -55,6 +60,21 @@ public class Game extends PApplet{
         this.gameLesson = loadImage("PlayVideoLesson.png");
         this.imgCorrectAnswer = loadImage("correctAnswer.png");
         this.imgIncorrectAnswer = loadImage("incorrectAnswer.png");
+
+        //Current FilePath
+        java.io.File parentDir = new java.io.File(this.sketchPath()+"\\resources");
+        String[] dirs = parentDir.list();
+        for (int i = 0 ; i < dirs.length ; i++) {
+            if (dirs[i].toLowerCase().matches("^topic.*.json$")) {
+                JSONObject obj = loadJSONObject(this.sketchPath()+ "\\resources\\" + dirs[i]);
+                Topic t = new Topic(obj);
+                jsonTopics.add(t);
+            }
+        }
+        if (jsonTopics.size() > 0) {
+            this.currentTopic = 0;
+        }
+        this.currentQuestion = 0;
 
         //TODO populate topics hash table with .json files
         this.topicJSONs = new JSONObject[2];
@@ -132,6 +152,22 @@ public class Game extends PApplet{
             }
         }
 
+        Button btnTopics = new Button(this, false, 500, 60,
+                this.width/2 + this.width/4, this.height/2 + height/16,
+                 jsonTopics.get(currentTopic).getDescription(),
+                false);
+        if(this.mousePressed && btnTopics.overRectangle()){
+            if (currentTopic < jsonTopics.size() - 1 ) {
+                currentTopic += 1;
+            } else {
+                currentTopic = 0;
+            }
+            this.delay(this.buttonDelay);
+
+            // Reset players to 1
+
+        }
+
         this.fill(207, 222, 231);
         this.text("Select number of players: " + this.nPlayers, width/2, height/2 - height/8);
         this.text("Select topic to play:", width/2, height/2 + height/16);
@@ -185,8 +221,10 @@ public class Game extends PApplet{
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
-                    System.out.println(isValidResponse);
                     this.playResults(this.isValidResponse);
+                    break;
+                case "LESSON-FINAL":
+                    this.showFinalResults();
                     break;
             }
     }
@@ -196,7 +234,8 @@ public class Game extends PApplet{
         this.textAlign(PConstants.CENTER);
         this.textSize(85); //85
         this.fill(255);
-        this.text("Lesson 1", this.width / 2, 85 + this.height/32);
+//        this.text("Lesson 1", this.width / 2, 85 + this.height/32);
+        this.text(jsonTopics.get(currentTopic).getDescription(), this.width / 2, 85 + this.height/32);
 
         // Display images and text
         this.imageMode(CENTER);
@@ -210,7 +249,8 @@ public class Game extends PApplet{
         //Buttons for images
         Button buttonLesson = new Button(this, true, this.width/3, this.width/3, this.width/4, this.height/2, "", false);
         if(this.mousePressed && buttonLesson.overCircle()){
-            PApplet.launch(this.sketchPath("")+"src\\SampleVideo.mp4");
+            PApplet.launch(jsonTopics.get(currentTopic).getVideo());
+//            PApplet.launch(this.sketchPath("")+"src\\SampleVideo.mp4");
             /*
             try {
                 // Runtime.getRuntime().exec("C:\\Program Files\\Windows Media Player\\wmplayer.exe /play C:\\Users\\Armando\\Documents\\GitHub\\Quiz-Buzzer-System\\src\\SampleVideo.mp4");
@@ -228,19 +268,40 @@ public class Game extends PApplet{
     }
 
     private void playLesson(){
+        java.util.List<Lesson> lessons = lessons = jsonTopics.get(currentTopic).getLessonsList();
+        Lesson lesson = lessons.get(currentQuestion);
+        int i = 0;
         //Show Question
         this.fill(255);
         this.textSize(100);
-        this.text("What is X?", this.width / 2, 100 + this.height/32);
+//        this.text("What is X?", this.width / 2, 100 + this.height/32);
+        this.text(lesson.getQuestion(), this.width / 2, 100 + this.height/32);
 
         //Show Answers
         this.textAlign(LEFT, CENTER);
         int textSize = 50;
         this.textSize(textSize);
-        this.text("A) Option 1", 100, this.height/2 + this.height/16 - (textSize*2 + 12));
-        this.text("B) Option 2", 100, this.height/2 + this.height/16 - (textSize/2 + 12));
-        this.text("C) Option 3", 100, this.height/2 + this.height/16 + (textSize/2 + 12 ));
-        this.text("D) Option 4", 100, this.height/2 + this.height/16 + (textSize*2 + 12));
+//        this.text("A) Option 1", 100, this.height/2 + this.height/16 - (textSize*2 + 12));
+//        this.text("B) Option 2", 100, this.height/2 + this.height/16 - (textSize/2 + 12));
+//        this.text("C) Option 3", 100, this.height/2 + this.height/16 + (textSize/2 + 12 ));
+//        this.text("D) Option 4", 100, this.height/2 + this.height/16 + (textSize*2 + 12));
+        lesson.getAnswers().keySet();
+        java.util.Iterator<String> itr = lesson.getAnswers().keySet().iterator();
+        while (itr.hasNext()) {
+            int y = 0;
+            switch(i) {
+                case 0: y = this.height/2 + this.height/16 - (textSize*2 + 12);
+                break;
+                case 1: y = this.height/2 + this.height/16 - (textSize/2 + 12);
+                    break;
+                case 2: y = this.height/2 + this.height/16 + (textSize/2 + 12);
+                    break;
+                case 3: y = this.height/2 + this.height/16 + (textSize*2 + 12);
+                    break;
+            }
+            this.text(itr.next(), 100, y);
+            i++;
+        }
 
 
         this.textAlign(CENTER, CENTER);
@@ -323,8 +384,6 @@ public class Game extends PApplet{
 
     private void playResults(Boolean isValidResponse){
 
-//        System.out.println(isValidResponse);
-
         if (isValidResponse){
             this.image(this.imgCorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
         } else {
@@ -343,7 +402,20 @@ public class Game extends PApplet{
 
         if(this.mousePressed){
             this.gamePlayState = "LESSON-PLAY";
+            if (this.currentQuestion < this.jsonTopics.get(currentTopic).getLessonsList().size() - 1) {
+                this.currentQuestion++;
+            } else {
+                this.gamePlayState = "LESSON-FINAL";
+            }
             this.delay(this.buttonDelay);
+        }
+    }
+
+    private void showFinalResults() {
+        this.text("Final results (Click)", this.width/2 , this.height/2);
+        if (this.mousePressed) {
+            this.gameState = "SETTINGS";
+            this.delay(2000);
         }
     }
 
