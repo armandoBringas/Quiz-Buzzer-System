@@ -3,8 +3,6 @@ import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
-
-import java.util.BitSet;
 import java.util.HashMap;
 
 // import java.io.IOException;
@@ -60,7 +58,7 @@ public class Game extends PApplet{
         this.topicJSONs[0] = this.loadJSONObject("topic1.json");
         this.topicJSONs[1] = this.loadJSONObject("topic2.json");
 
-        //TODO Remove Hard coded filled of topics
+        //TODO Remove Hard coded filled of topics - Build Topic Class
     }
 
     // Processing Display
@@ -175,9 +173,7 @@ public class Game extends PApplet{
         }
     }
 
-
     private void playGame(){
-
             switch (this.gamePlayState) {
                 case "LESSON-COVER":
                     this.coverLesson();
@@ -189,9 +185,7 @@ public class Game extends PApplet{
                     this.playResults();
                     break;
             }
-
     }
-
 
     private void coverLesson(){
         // Show text 1
@@ -274,6 +268,25 @@ public class Game extends PApplet{
             }
         }
 
+        // Evaluate Response
+        if(this.keyPressed && this.stopTimer){
+            switch (String.valueOf(key).toUpperCase()){
+                case "A":
+                    this.gamePlayState = "LESSON-RESULTS";
+
+                case "B":
+                    this.gamePlayState = "LESSON-RESULTS";
+
+                case "C":
+                    this.gamePlayState = "LESSON-RESULTS";
+
+                case "D":
+                    this.gamePlayState = "LESSON-RESULTS";
+            }
+            this.delay(this.buttonDelay);
+        }
+
+
         // Time out
         if (this.timer.getTime() == 0){
             this.gamePlayState = "LESSON-RESULTS";
@@ -304,6 +317,4 @@ public class Game extends PApplet{
     private void hardCodedTopic1(){
 
     }
-
-
 }

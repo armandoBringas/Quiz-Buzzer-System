@@ -5,10 +5,12 @@ public class Topic {
     private int ID;
     private String description;
     private List<Lesson> lessonsList;
+    private String video;
 
-    public Topic(int ID, String description){
+    public Topic(int ID, String description, String video){
         this.ID = ID;
         this.description = description;
+        this.video = video;
         this.lessonsList = new ArrayList<>();
     }
 
@@ -18,6 +20,10 @@ public class Topic {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public String getVideo(){
+        return this.video;
     }
 
     public List<Lesson> getLessonsList() {
