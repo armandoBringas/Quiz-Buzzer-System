@@ -16,7 +16,7 @@ public class Player {
 
     // Method to add score to the player
     public int addScore(){
-        return this.score += 1;
+        return this.score += 10;
     }
 
     // Get player number

@@ -1,3 +1,4 @@
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
@@ -20,8 +21,10 @@ public class Game extends PApplet{
     private int playerToRespondID;
 
     //Players
-    private  int nPlayers = 2;
+    private int nPlayers = 2;
     private static Player[] players;
+    private boolean isValidResponse;
+    private int winnerPlayer;
 
     //Topic with lessons
     private HashMap<String, Lesson[]> topic = new HashMap<String, Lesson[]>();
@@ -182,7 +185,7 @@ public class Game extends PApplet{
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
-                    this.playResults();
+                    this.playResults(this.isValidResponse);
                     break;
             }
     }
@@ -270,43 +273,68 @@ public class Game extends PApplet{
 
         // Evaluate Response
         if(this.keyPressed && this.stopTimer){
+
             switch (String.valueOf(key).toUpperCase()){
+                // false
                 case "A":
                     this.gamePlayState = "LESSON-RESULTS";
-
+                    this.isValidResponse = false;
+                    this.timer.setTime(10);
+                    this.stopTimer = false;
+                // true
                 case "B":
                     this.gamePlayState = "LESSON-RESULTS";
-
+                    players[this.playerToRespondID - 1].addScore();
+                    this.isValidResponse = true;
+                    this.winnerPlayer = this.playerToRespondID;
+                    this.timer.setTime(10);
+                    this.stopTimer = false;
+                // false
                 case "C":
                     this.gamePlayState = "LESSON-RESULTS";
-
+                    this.isValidResponse = false;
+                    this.timer.setTime(10);
+                    this.stopTimer = false;
+                // false
                 case "D":
                     this.gamePlayState = "LESSON-RESULTS";
+                    this.isValidResponse = false;
+                    this.timer.setTime(10);
+                    this.stopTimer = false;
             }
             this.delay(this.buttonDelay);
         }
 
 
         // Time out
-        if (this.timer.getTime() == 0){
+        if (this.timer.getTime() == 0 && !this.isValidResponse){
             this.gamePlayState = "LESSON-RESULTS";
+            this.isValidResponse = false;
             this.timer.setTime(10);
             this.stopTimer = false;
+
         }
     }
 
-    private void playResults(){
-        //Show text 1
-        this.fill(255);
-        this.text("It's a draw!", this.width / 2, 85 + this.height/32);
+    private void playResults(Boolean isValidResponse){
+
+        System.out.println(this.isValidResponse);
+
+        if (isValidResponse){
+            this.image(this.imgCorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
+        } else {
+            //Show text 1
+            this.fill(255);
+            this.text("It's a draw!", this.width / 2, 85 + this.height/32);
+
+            //Show image
+            this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
+        }
 
         // Show text 2
         this.textSize(50);
         this.fill(207, 222, 231);
         this.text("Click anywhere to continue!...", width/2, height - height/8);
-
-        //Show image
-        this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
 
         if(this.mousePressed){
             this.gamePlayState = "LESSON-PLAY";
