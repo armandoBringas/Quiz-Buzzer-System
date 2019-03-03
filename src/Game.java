@@ -3,6 +3,8 @@ import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
+
+import java.util.BitSet;
 import java.util.HashMap;
 
 // import java.io.IOException;
@@ -13,7 +15,11 @@ public class Game extends PApplet{
     private String gameState;
     private String gamePlayState;
     private int buttonDelay = 250;
+
+    //Timer
     private Timer timer;
+    private Boolean stopTimer = false;
+    private int playerToRespondID;
 
     //Players
     private  int nPlayers = 2;
@@ -139,7 +145,7 @@ public class Game extends PApplet{
             // Setup players
             players = new Player[this.nPlayers];
             for (int i = 0; i < this.nPlayers; i++){
-                players[i] = new Player(i);
+                players[i] = new Player(i + 1);
             }
 
         }
@@ -224,25 +230,70 @@ public class Game extends PApplet{
     }
 
     private void playLesson(){
+        //Show Question
+        this.fill(255);
+        this.textSize(100);
+        this.text("What is X?", this.width / 2, 100 + this.height/32);
 
-        this.timer.countDown();
-        this.text((int)this.timer.getTime(), this.width / 2, this.height /2);
+        //Show Answers
+        this.textAlign(LEFT, CENTER);
+        int textSize = 50;
+        this.textSize(textSize);
+        this.text("A) Option 1", 100, this.height/2 + this.height/16 - (textSize*2 + 12));
+        this.text("B) Option 2", 100, this.height/2 + this.height/16 - (textSize/2 + 12));
+        this.text("C) Option 3", 100, this.height/2 + this.height/16 + (textSize/2 + 12 ));
+        this.text("D) Option 4", 100, this.height/2 + this.height/16 + (textSize*2 + 12));
+
+
+        this.textAlign(CENTER, CENTER);
+
+        //Show timer
+        if (!this.stopTimer){
+            this.timer.countDown();
+        }
+        this.stroke(255);
+        this.strokeWeight(3);
+        this.fill(0,0,255);
+        this.ellipse((3*this.width)/4, this.height /2 + this.height/16, 300, 300);
+        this.textSize(200);
+        this.fill(255,140,0);
+        this.text((int)this.timer.getTime(), (3*this.width)/4, this.height /2 + this.height/16);
+
+        // Player press button
+        if (this.keyPressed){
+            if(this.key == '1'){
+                this.stopTimer = true;
+                this.delay(this.buttonDelay);
+                // ID: 1 is player 1
+                this.playerToRespondID = 1;
+            } else if(this.key == '2'){
+                this.stopTimer = true;
+                this.delay(this.buttonDelay);
+                // ID: 2 is player 1
+                this.playerToRespondID = 2;
+            }
+        }
 
         // Time out
         if (this.timer.getTime() == 0){
             this.gamePlayState = "LESSON-RESULTS";
             this.timer.setTime(10);
+            this.stopTimer = false;
         }
     }
 
     private void playResults(){
-        this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
+        //Show text 1
+        this.fill(255);
+        this.text("It's a draw!", this.width / 2, 85 + this.height/32);
 
         // Show text 2
         this.textSize(50);
         this.fill(207, 222, 231);
-        this.text("Click anywhere to start!...", width/2, height/2 + height/8);
+        this.text("Click anywhere to continue!...", width/2, height - height/8);
 
+        //Show image
+        this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
 
         if(this.mousePressed){
             this.gamePlayState = "LESSON-PLAY";
