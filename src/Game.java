@@ -412,7 +412,24 @@ public class Game extends PApplet{
     }
 
     private void showFinalResults() {
-        this.text("Final results (Click)", this.width/2 , this.height/2);
+        this.textSize(50);
+        this.fill(207, 222, 231);
+        this.text("Final scores:", this.width/2 , this.height/2);
+        this.text("Player 1: " + String.valueOf(players[0].getScore()), this.width/2, this.height/2 + this.height/16 + (50/2 + 12));
+        this.text("Player 2: " + String.valueOf(players[1].getScore()), this.width/2, this.height/2 + this.height/16 + (50*2 + 12));
+
+        //Show winner
+        String winnerState = "Its's a draw!";
+        if (players[0].getScore() > players[1].getScore()){
+            winnerState = "Player 1 wins!";
+        } else if (players[0].getScore() < players[1].getScore()){
+            winnerState = "Player 2 wins1";
+        }
+
+        this.textSize(150);
+        this.fill(252, 226, 5);
+        this.text(winnerState, this.width/2, 100);
+
         if (this.mousePressed) {
             this.gameState = "SETTINGS";
             this.delay(2000);
