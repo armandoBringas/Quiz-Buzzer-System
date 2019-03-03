@@ -185,6 +185,7 @@ public class Game extends PApplet{
                     this.playLesson();
                     break;
                 case "LESSON-RESULTS":
+                    System.out.println(isValidResponse);
                     this.playResults(this.isValidResponse);
                     break;
             }
@@ -281,6 +282,7 @@ public class Game extends PApplet{
                     this.isValidResponse = false;
                     this.timer.setTime(10);
                     this.stopTimer = false;
+                    break;
                 // true
                 case "B":
                     this.gamePlayState = "LESSON-RESULTS";
@@ -289,18 +291,21 @@ public class Game extends PApplet{
                     this.winnerPlayer = this.playerToRespondID;
                     this.timer.setTime(10);
                     this.stopTimer = false;
+                    break;
                 // false
                 case "C":
                     this.gamePlayState = "LESSON-RESULTS";
                     this.isValidResponse = false;
                     this.timer.setTime(10);
                     this.stopTimer = false;
+                    break;
                 // false
                 case "D":
                     this.gamePlayState = "LESSON-RESULTS";
                     this.isValidResponse = false;
                     this.timer.setTime(10);
                     this.stopTimer = false;
+                    break;
             }
             this.delay(this.buttonDelay);
         }
@@ -318,7 +323,7 @@ public class Game extends PApplet{
 
     private void playResults(Boolean isValidResponse){
 
-        System.out.println(this.isValidResponse);
+//        System.out.println(isValidResponse);
 
         if (isValidResponse){
             this.image(this.imgCorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
