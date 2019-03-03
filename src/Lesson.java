@@ -4,11 +4,10 @@ public class Lesson {
 
     private int number;
     private String question;
-    HashMap<String, Boolean> answers;
+    private HashMap<String, Boolean> answers;
 
-    Lesson(int number, String description, String question, HashMap<String, Boolean> answers) {
+    Lesson(int number, String question, HashMap<String, Boolean> answers) {
         this.number = number;
-        this.description = description;
         this.question = question;
         this.answers = answers;
     }
