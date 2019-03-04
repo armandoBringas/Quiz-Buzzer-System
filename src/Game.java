@@ -383,19 +383,31 @@ public class Game extends PApplet{
     }
 
     private void playResults(Boolean isValidResponse){
+        // Show scores
+        this.textAlign(LEFT, CENTER);
+        this.textSize(50);
+        this.fill(252, 226, 5);
+        this.text("Scores:", this.width/2 , this.height/2);
+        this.text("Player 1: " + String.valueOf(players[0].getScore()), (3*this.width)/4, this.height/2 - this.height/16 + 12);
+        this.text("Player 2: " + String.valueOf(players[1].getScore()), (3*this.width)/4, this.height/2 + this.height/16 + 12);
 
+        // Validate response
+        this.textAlign(CENTER);
+        this.textSize(75);
+        this.fill(255);
         if (isValidResponse){
             this.image(this.imgCorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
+            this.text("Player " + this.winnerPlayer + " wins!", this.width / 2, 100 + this.height/32);
         } else {
             //Show text 1
-            this.fill(255);
-            this.text("It's a draw!", this.width / 2, 85 + this.height/32);
+            this.text("It's a draw!", this.width / 2, 100 + this.height/32);
 
             //Show image
             this.image(this.imgIncorrectAnswer, this.width/2, this.height/2, this.width/4, this.width/4);
         }
 
         // Show text 2
+        this.textAlign(CENTER);
         this.textSize(50);
         this.fill(207, 222, 231);
         this.text("Click anywhere to continue!...", width/2, height - height/8);
@@ -412,6 +424,7 @@ public class Game extends PApplet{
     }
 
     private void showFinalResults() {
+        // Show scores
         this.textSize(50);
         this.fill(207, 222, 231);
         this.text("Final scores:", this.width/2 , this.height/2);
