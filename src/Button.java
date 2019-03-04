@@ -51,7 +51,7 @@ public class Button {
         return (PApplet.sqrt(PApplet.sq(disX) + PApplet.sq(disY)) < this.sizeX / 2);
     }
 
-    boolean overRect(){
+    boolean overRectangle(){
         return this.p.mouseX >= this.locX
                 && this.p.mouseX <= this.locX + this.sizeX
                 && this.p.mouseY >= this.locY
