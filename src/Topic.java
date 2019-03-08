@@ -30,19 +30,28 @@ public class Topic {
         try {
 
             objTopicProperty = objTopic.getJSONObject(0);
-            this.description = objTopicProperty.get("description").toString();
-            this.video = objTopicProperty.get("video").toString();
-
-//            System.out.println(this.description);
-//            System.out.println(this.video);
+            if (objTopicProperty.hasKey("description")) {
+                this.description = objTopicProperty.get("description").toString();
+            }
+            if (objTopicProperty.hasKey("video")) {
+                this.video = objTopicProperty.get("video").toString();
+            }
 
             for ( int i = 1 ; i < objTopic.size() ; i++ ){
+                answers = new HashMap<String, Boolean>();
                 objItem = objTopic.getJSONObject(i);
-
-                answers.putAll(extractAnswer(objItem, "option1"));
-                answers.putAll(extractAnswer(objItem, "option2"));
-                answers.putAll(extractAnswer(objItem, "option3"));
-                answers.putAll(extractAnswer(objItem, "option4"));
+                if (objItem.hasKey("option4")) {
+                    answers.putAll(extractAnswer(objItem, "option4"));
+                }
+                if (objItem.hasKey("option3")) {
+                    answers.putAll(extractAnswer(objItem, "option3"));
+                }
+                if (objItem.hasKey("option2")) {
+                    answers.putAll(extractAnswer(objItem, "option2"));
+                }
+                if (objItem.hasKey("option1")) {
+                    answers.putAll(extractAnswer(objItem, "option1"));
+                }
 //                arrItem = objItem.getJSONArray("option1");
 //                itemProp = arrItem.getJSONObject(0);
 //                answers.put(itemProp.getString("answer"), itemProp.getBoolean("isCorrect"));

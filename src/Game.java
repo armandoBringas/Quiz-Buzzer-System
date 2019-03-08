@@ -15,6 +15,8 @@ public class Game extends PApplet{
     private String gameState;
     private String gamePlayState;
     private int buttonDelay = 250;
+    private float fadeFloat;
+    private boolean fadeOut = false;
 
     //Timer
     private Timer timer;
@@ -152,10 +154,11 @@ public class Game extends PApplet{
             }
         }
 
+        this.stroke(0);
+
         Button btnTopics = new Button(this, false, 500, 60,
-                this.width/2 + this.width/4, this.height/2 + height/16,
-                 jsonTopics.get(currentTopic).getDescription(),
-                false);
+                this.width/2, this.height/2 + height/16,
+                "", false);
         if(this.mousePressed && btnTopics.overRectangle()){
             if (currentTopic < jsonTopics.size() - 1 ) {
                 currentTopic += 1;
@@ -163,20 +166,20 @@ public class Game extends PApplet{
                 currentTopic = 0;
             }
             this.delay(this.buttonDelay);
-
-            // Reset players to 1
-
         }
 
         this.fill(207, 222, 231);
         this.text("Select number of players: " + this.nPlayers, width/2, height/2 - height/8);
-        this.text("Select topic to play:", width/2, height/2 + height/16);
+        this.text("Select topic to play: " + jsonTopics.get(currentTopic).getDescription(),
+                    width/2, height/2 + height/16);
 
 
         // Continue button
         Button button = new Button(this, false, 350, 125, this.width/2, this.height - 125, "Start Game!", true);
         if(this.mousePressed && button.overRectangle()){
-            this.gameState = "TOPIC";
+//            this.gameState = "TOPIC";
+            this.gameState = "PLAY";
+            this.gamePlayState = "LESSON-COVER";
             this.delay(this.buttonDelay);
 
             // Setup players
@@ -273,7 +276,8 @@ public class Game extends PApplet{
         int i = 0;
         //Show Question
         this.fill(255);
-        this.textSize(100);
+        this.textSize(75);
+        if (lesson.getQuestion().length() > 40) {this.textSize(50);}
 //        this.text("What is X?", this.width / 2, 100 + this.height/32);
         this.text(lesson.getQuestion(), this.width / 2, 100 + this.height/32);
 
@@ -289,17 +293,27 @@ public class Game extends PApplet{
         java.util.Iterator<String> itr = lesson.getAnswers().keySet().iterator();
         while (itr.hasNext()) {
             int y = 0;
+            String outStr = "";
             switch(i) {
-                case 0: y = this.height/2 + this.height/16 - (textSize*2 + 12);
-                break;
-                case 1: y = this.height/2 + this.height/16 - (textSize/2 + 12);
+                case 0:
+                    y = this.height/2 + this.height/16 - (textSize*2 + 12);
+                    outStr += "A) ";
                     break;
-                case 2: y = this.height/2 + this.height/16 + (textSize/2 + 12);
+                case 1:
+                    y = this.height/2 + this.height/16 - (textSize/2 + 12);
+                    outStr += "B) ";
                     break;
-                case 3: y = this.height/2 + this.height/16 + (textSize*2 + 12);
+                case 2:
+                    y = this.height/2 + this.height/16 + (textSize/2 + 12);
+                    outStr += "C) ";
+                    break;
+                case 3:
+                    y = this.height/2 + this.height/16 + (textSize*2 + 12);
+                    outStr += "D) ";
                     break;
             }
-            this.text(itr.next(), 100, y);
+            outStr += itr.next();
+            this.text(outStr, 50, y);
             i++;
         }
 
@@ -309,7 +323,23 @@ public class Game extends PApplet{
         //Show timer
         if (!this.stopTimer){
             this.timer.countDown();
+            this.fadeFloat = 0;
+        } else {
+            this.fill(255, fadeFloat);
+            this.text("Waiting for Player " + this.playerToRespondID + " response", width/2, (height/6)*5 );
+            if (this.fadeFloat <= 0 ){
+                fadeOut = true;
+            } else if (fadeFloat > 255){
+                fadeOut = false;
+            }
+            if (fadeOut ) {
+                this.fadeFloat += 3;
+            } else {
+                this.fadeFloat -= 3;
+            }
         }
+
+        //Timer
         this.stroke(255);
         this.strokeWeight(3);
         this.fill(0,0,255);
@@ -336,38 +366,93 @@ public class Game extends PApplet{
         // Evaluate Response
         if(this.keyPressed && this.stopTimer){
 
-            switch (String.valueOf(key).toUpperCase()){
-                // false
-                case "A":
-                    this.gamePlayState = "LESSON-RESULTS";
-                    this.isValidResponse = false;
-                    this.timer.setTime(10);
-                    this.stopTimer = false;
+            Object[] allKeys = lesson.getAnswers().keySet().toArray();
+            boolean isCorrect = false;
+            boolean validKey = false;
+            int answerKey = -1;
+            switch (String.valueOf(key).toLowerCase()) {
+                case "a":
+                    answerKey = 0;
+//                    if (0 < allKeys.length ) {
+//                        isCorrect = lesson.isCorrectAnswer(allKeys[0].toString());
+//                    }
+                    validKey = true;
                     break;
-                // true
-                case "B":
-                    this.gamePlayState = "LESSON-RESULTS";
+                case "b":
+                    answerKey = 1;
+//                    if (1 < allKeys.length ) {
+//                        isCorrect = lesson.isCorrectAnswer(allKeys[1].toString());
+//                    }
+                    validKey = true;
+                    break;
+                case "c":
+                    answerKey = 2;
+//                    if (2 < allKeys.length ) {
+//                        isCorrect = lesson.isCorrectAnswer(allKeys[2].toString());
+//                    }
+                    validKey = true;
+                    break;
+                case "d":
+                    answerKey = 3;
+//                    if (3 < allKeys.length ) {
+//                        isCorrect = lesson.isCorrectAnswer(allKeys[3].toString());
+//                    }
+                    validKey = true;
+                    break;
+                default: validKey = false;
+                break;
+            }
+
+            if (validKey) {
+                if ( answerKey >= 0 && answerKey < allKeys.length ) {
+                    isCorrect = lesson.isCorrectAnswer(allKeys[answerKey].toString());
+                }
+                if (isCorrect) {
                     players[this.playerToRespondID - 1].addScore();
                     this.isValidResponse = true;
                     this.winnerPlayer = this.playerToRespondID;
-                    this.timer.setTime(10);
-                    this.stopTimer = false;
-                    break;
-                // false
-                case "C":
                     this.gamePlayState = "LESSON-RESULTS";
-                    this.isValidResponse = false;
                     this.timer.setTime(10);
                     this.stopTimer = false;
-                    break;
-                // false
-                case "D":
+                } else {
+                    this.isValidResponse = false;
                     this.gamePlayState = "LESSON-RESULTS";
-                    this.isValidResponse = false;
                     this.timer.setTime(10);
                     this.stopTimer = false;
-                    break;
+                }
             }
+//            switch (String.valueOf(key).toUpperCase()){
+//                // false
+//                case "A":
+//                    this.gamePlayState = "LESSON-RESULTS";
+//                    this.isValidResponse = false;
+//                    this.timer.setTime(10);
+//                    this.stopTimer = false;
+//                    break;
+//                // true
+//                case "B":
+//                    this.gamePlayState = "LESSON-RESULTS";
+//                    players[this.playerToRespondID - 1].addScore();
+//                    this.isValidResponse = true;
+//                    this.winnerPlayer = this.playerToRespondID;
+//                    this.timer.setTime(10);
+//                    this.stopTimer = false;
+//                    break;
+//                // false
+//                case "C":
+//                    this.gamePlayState = "LESSON-RESULTS";
+//                    this.isValidResponse = false;
+//                    this.timer.setTime(10);
+//                    this.stopTimer = false;
+//                    break;
+//                // false
+//                case "D":
+//                    this.gamePlayState = "LESSON-RESULTS";
+//                    this.isValidResponse = false;
+//                    this.timer.setTime(10);
+//                    this.stopTimer = false;
+//                    break;
+//            }
             this.delay(this.buttonDelay);
         }
 
@@ -383,6 +468,27 @@ public class Game extends PApplet{
     }
 
     private void playResults(Boolean isValidResponse){
+        //show answers
+        this.textAlign(CENTER);
+        this.textSize(50);
+        this.fill(255);
+        this.text("Correct answer:", this.width/5 , (this.height/8)*4);
+        Lesson lesson = jsonTopics.get(currentTopic).getLessonsList().get(currentQuestion);
+        java.util.Set<String> keys = lesson.getAnswers().keySet();
+        java.util.Iterator<String> itr = lesson.getAnswers().keySet().iterator();
+        while (itr.hasNext()) {
+            String ans = itr.next();
+            boolean isCorrect = lesson.getAnswers().get(ans);
+            if (ans.length() > 20) {
+                this.textSize(25);
+            }
+            if (isCorrect) {
+              this.text(ans, width/5, (height/8)*5);
+            }
+        }
+//        this.text("Player 1: " + String.valueOf(players[0].getScore()), (3*this.width)/4, this.height/2 - this.height/16 + 12);
+//        this.text("Player 2: " + String.valueOf(players[1].getScore()), (3*this.width)/4, this.height/2 + this.height/16 + 12);
+
         // Show scores
         this.textAlign(LEFT, CENTER);
         this.textSize(50);
@@ -441,15 +547,21 @@ public class Game extends PApplet{
 
         this.textSize(150);
         this.fill(252, 226, 5);
-        this.text(winnerState, this.width/2, 100);
+        this.text(winnerState, this.width/2, 150);
+
+        this.currentQuestion = 0;
 
         if (this.mousePressed) {
             this.gameState = "SETTINGS";
-            this.delay(2000);
+            this.delay(100);
         }
     }
 
-    private void hardCodedTopic1(){
-
+    private boolean validAnswerKey(Object[] allKeys, int answerInt) {
+        if (answerInt > -1 && answerInt > allKeys.length) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

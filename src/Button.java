@@ -52,9 +52,9 @@ public class Button {
     }
 
     boolean overRectangle(){
-        return this.p.mouseX >= this.locX
-                && this.p.mouseX <= this.locX + this.sizeX
-                && this.p.mouseY >= this.locY
-                && this.p.mouseY <= this.locY + this.sizeY;
+        return this.p.mouseX >= this.locX - (this.sizeX / 2 )
+                && this.p.mouseX <= this.locX + (this.sizeX / 2 )
+                && this.p.mouseY >= this.locY - (this.sizeY / 2 )
+                && this.p.mouseY <= this.locY + (this.sizeY / 2) ;
     }
 }
