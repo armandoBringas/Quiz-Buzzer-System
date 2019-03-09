@@ -568,7 +568,7 @@ public class Game extends PApplet{
         if (players[0].getScore() > players[1].getScore()){
             winnerState = "Player 1 wins!";
         } else if (players[0].getScore() < players[1].getScore()){
-            winnerState = "Player 2 wins1";
+            winnerState = "Player 2 wins!";
         }
 
         this.textSize(150);
