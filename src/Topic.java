@@ -92,6 +92,10 @@ public class Topic {
         return this.lessonsList;
     }
 
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
     //Add lessons to the list
     public void addLesson(Lesson lesson){
         this.lessonsList.add(lesson);

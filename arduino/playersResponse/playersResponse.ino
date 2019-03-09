@@ -16,6 +16,7 @@ void setup()
    pinMode(ledPlayer2, OUTPUT);
    pinMode(buttonPlayer1, INPUT);
    pinMode(buttonPlayer2, INPUT);
+   Serial.begin(9600);
 }
  
 void loop()
@@ -24,11 +25,13 @@ void loop()
   buttonPlayer2State = digitalRead(buttonPlayer2);
 
     if (buttonPlayer1State == buttonPushed){
+      Serial.println("1");
       digitalWrite(ledPlayer1, HIGH);
       digitalWrite(ledPlayer2, LOW);
       delay(5000);
       
     } else if (buttonPlayer2State == buttonPushed){
+      Serial.println("2");
       digitalWrite(ledPlayer1, LOW);
       digitalWrite(ledPlayer2, HIGH);
       delay(5000);
@@ -36,6 +39,6 @@ void loop()
     } else {
       digitalWrite(ledPlayer1, LOW);
       digitalWrite(ledPlayer2, LOW);
+      Serial.print("");
     }
-    
 }
