@@ -26,7 +26,7 @@ public class Lesson {
 
     public Boolean isCorrectAnswer(String answer){
         if (this.answers.containsKey(answer)){
-            return this.answers.get("answer");
+            return this.answers.get(answer).booleanValue();
         } else {
             return false;
         }
