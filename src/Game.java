@@ -4,6 +4,7 @@ import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PImage;
 import processing.data.JSONObject;
+import processing.serial.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -45,6 +46,10 @@ public class Game extends PApplet{
     private PImage imgCorrectAnswer;
     private PImage imgIncorrectAnswer;
 
+    //Arduino
+    Serial myPort;  // Create object from Serial class
+    String val;     // Data received from the serial port
+
     // Start Processing
     public static void main(String... args){
         PApplet.main("Game");
@@ -70,6 +75,7 @@ public class Game extends PApplet{
             if (dirs[i].toLowerCase().matches("^topic.*.json$")) {
                 JSONObject obj = loadJSONObject(this.sketchPath()+ "\\resources\\" + dirs[i]);
                 Topic t = new Topic(obj);
+                t.setVideo(this.sketchPath() + "\\resources\\" + t.getVideo());
                 jsonTopics.add(t);
             }
         }
@@ -83,7 +89,9 @@ public class Game extends PApplet{
         this.topicJSONs[0] = this.loadJSONObject("topic1.json");
         this.topicJSONs[1] = this.loadJSONObject("topic2.json");
 
-        //TODO Remove Hard coded filled of topics - Build Topic Class
+        //Read arduino
+        String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
+        myPort = new Serial(this, portName, 9600);
     }
 
     // Processing Display
@@ -349,22 +357,37 @@ public class Game extends PApplet{
         this.text((int)this.timer.getTime(), (3*this.width)/4, this.height /2 + this.height/16);
 
         // Player press button
-        if (this.keyPressed){
-            if(this.key == '1'){
+        // Read Arduino port
+        /*if ( val == null && myPort.available() > 0)
+        {  // If data is available,
+            val = myPort.readStringUntil('\n');         // read it and store it in val
+        }*/
+
+        if (val == null){
+            if(myPort.available() > 0) {
+                val = myPort.readStringUntil('\n');     // read it and store it in val
+                //myPort.clear();
+                //myPort.stop();
+            }
+        }
+        //System.out.println(val); //print it out in the console
+
+        if ( val != null ){
+            if(val.charAt(0) == '1') { //equals("1")){
                 this.stopTimer = true;
-                this.delay(this.buttonDelay);
+                //this.delay(this.buttonDelay);
                 // ID: 1 is player 1
                 this.playerToRespondID = 1;
-            } else if(this.key == '2'){
+            } else if(val.charAt(0) == '2' ) { //.equals("2")){
                 this.stopTimer = true;
-                this.delay(this.buttonDelay);
+                //this.delay(this.buttonDelay);
                 // ID: 2 is player 1
                 this.playerToRespondID = 2;
             }
         }
 
         // Evaluate Response
-        if(this.keyPressed && this.stopTimer){
+        if(val != null && keyPressed && this.stopTimer){
 
             Object[] allKeys = lesson.getAnswers().keySet().toArray();
             boolean isCorrect = false;
@@ -453,7 +476,7 @@ public class Game extends PApplet{
 //                    this.stopTimer = false;
 //                    break;
 //            }
-            this.delay(this.buttonDelay);
+//            this.delay(this.buttonDelay);
         }
 
 
@@ -468,6 +491,9 @@ public class Game extends PApplet{
     }
 
     private void playResults(Boolean isValidResponse){
+        //reset Arduino response
+        val = null;
+
         //show answers
         this.textAlign(CENTER);
         this.textSize(50);
