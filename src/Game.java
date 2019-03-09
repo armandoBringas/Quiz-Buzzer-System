@@ -321,6 +321,11 @@ public class Game extends PApplet{
                     break;
             }
             outStr += itr.next();
+            if (outStr.length() > 30){
+                this.textSize(35);
+            } else if (outStr.length() > 50) {
+                this.textSize(15);
+            }
             this.text(outStr, 50, y);
             i++;
         }

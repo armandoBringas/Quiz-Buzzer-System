@@ -28,13 +28,13 @@ void loop()
       Serial.println("1");
       digitalWrite(ledPlayer1, HIGH);
       digitalWrite(ledPlayer2, LOW);
-      delay(5000);
+      delay(3000);
       
     } else if (buttonPlayer2State == buttonPushed){
       Serial.println("2");
       digitalWrite(ledPlayer1, LOW);
       digitalWrite(ledPlayer2, HIGH);
-      delay(5000);
+      delay(3000);
       
     } else {
       digitalWrite(ledPlayer1, LOW);

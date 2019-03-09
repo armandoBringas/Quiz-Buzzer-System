@@ -58,7 +58,7 @@
     ],
     "option2": [
       {
-        "answer": "It is possible that one of the exits is obstructed by smoke or fire, so you must\nknow where the other exits are.",
+        "answer": "It is possible that one of the exits is obstructed by smoke or fire,\n so you must know where the other exits are.",
         "isCorrect": true
       }
     ],
@@ -108,7 +108,7 @@
     ],
     "option3": [
       {
-        "answer": "The smoke it is toxic and dangerous. You will breathe less smoke\nif you stay close to the ground",
+        "answer": "The smoke it is toxic and dangerous. You will breathe less\nsmoke if you stay close to the ground",
         "isCorrect": true
       }
     ]
